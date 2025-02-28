@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { getUsers, addUser, getUserById, updateUser, deleteUser } = require('../queries/users');
+const bcrypt = require('bcrypt');
+const passport = require('../middleware/auth');
+const { getUsers, addUser, getUserById, getUserByEmail, updateUser, deleteUser } = require('../queries/users');
 
 // GET all users
 router.get('/', async (req, res) => {
@@ -25,16 +27,49 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// POST a new user
-router.post('/', async (req, res) => {
+// POST - Register a new user
+router.post('/register', async (req, res) => {
     const { id, name, email, password } = req.body;
+
+    // Validation - checking if all fields are provided
+    if(!id || !name || !email || !password) {
+        return res.status(400).json({ error: 'Please provide an id, name, email and password'});
+    }
+
     try {
-        const result = await addUser(id, name, email, password);
-        res.status(201).json(result.rows[0]);
+
+        // Hashing the password before saving it
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Calling the query function to add the user
+        const result = await addUser(id, name, email, hashedPassword);
+
+        const newUser = result.rows[0];
+
+        // Return the created user object (do not include password in the response)
+        res.status(201).json({
+            id: newUser.id,
+            name: newUser.name,
+            email: newUser.email
+        });
+
     } catch (err) {
         console.error(err);
         res.status(500).send('Error creating user')
     }
+});
+
+// POST - User login
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+        if (err) return next(err);
+        if (!user) return res.status(401).json({ error: info.message });
+
+        req.login(user, (err) => {
+            if (err) return next(err);
+            return res.json({ id: user.id, name: user.name, email: user.email });
+        });
+    }) (req, res, next);
 });
 
 // PUT - Update a user by id
