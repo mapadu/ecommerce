@@ -2,7 +2,14 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const passport = require('../middleware/auth');
-const { getUsers, addUser, getUserById, getUserByEmail, updateUser, deleteUser } = require('../queries/users');
+const { 
+    getUsers, 
+    addUser, 
+    getUserById, 
+    getUserByEmail, 
+    updateUser, 
+    deleteUser 
+} = require('../queries/users');
 
 // GET all users
 router.get('/', async (req, res) => {
@@ -32,7 +39,7 @@ router.post('/register', async (req, res) => {
     const { id, name, email, password } = req.body;
 
     // Validation - checking if all fields are provided
-    if(!id || !name || !email || !password) {
+    if(!name || !email || !password) {
         return res.status(400).json({ error: 'Please provide an id, name, email and password'});
     }
 
@@ -42,7 +49,7 @@ router.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Calling the query function to add the user
-        const result = await addUser(id, name, email, hashedPassword);
+        const result = await addUser(name, email, hashedPassword);
 
         const newUser = result.rows[0];
 

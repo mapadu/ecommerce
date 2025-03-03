@@ -3,6 +3,7 @@ const session = require('express-session');
 const passport = require('./middleware/auth');
 const app = express();
 const userRoutes = require('./routes/users');
+const productRoutes = require('./routes/products');
 const PORT = 3000;
 require('dotenv').config();
 
@@ -28,6 +29,7 @@ app.use(passport.session());
 
 // Attaching routes to the app
 app.use('/users', userRoutes);
+app.use('/products', productRoutes);
 
 
 app.listen(PORT, () => {
