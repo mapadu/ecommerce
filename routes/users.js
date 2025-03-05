@@ -36,7 +36,7 @@ router.get('/:id', async (req, res) => {
 
 // POST - Register a new user
 router.post('/register', async (req, res) => {
-    const { id, name, email, password } = req.body;
+    const { name, email, password } = req.body;
 
     // Validation - checking if all fields are provided
     if(!name || !email || !password) {

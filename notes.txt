@@ -1,1 +1,7 @@
-Adding user authentication security all routes related to a user.
+- Adding user authentication security to all routes related to users.
+- Instead of passing user_id as a parameter in the URL (/orders/user/:user_id),
+grab the user_id from the authenticated user (req.user.id) like in the checkout logic
+ - when creating a cart...
+
+ - total price calculation in carts table
+
