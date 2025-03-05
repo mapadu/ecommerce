@@ -5,6 +5,7 @@ const app = express();
 const userRoutes = require('./routes/users');
 const productRoutes = require('./routes/products');
 const cartRoutes = require('./routes/carts');
+const orderRoutes = require('./routes/orders');
 const PORT = 3000;
 require('dotenv').config();
 
@@ -32,6 +33,7 @@ app.use(passport.session());
 app.use('/users', userRoutes);
 app.use('/products', productRoutes);
 app.use('/carts', cartRoutes);
+app.use('/orders', orderRoutes);
 
 
 app.listen(PORT, () => {

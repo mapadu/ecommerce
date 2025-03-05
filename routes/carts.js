@@ -1,5 +1,3 @@
-// price should be fetched from the products stable when adding a product to the cart, not entering manually!!!
-
 const express = require('express');
 const router = express.Router();
 
@@ -18,6 +16,8 @@ const {
     removeCartItem,
     clearCart
 } = require('../queries/cart_items');
+
+const { createOrder, createOrderItems } = require('../queries/orders');
 
 // ** CART ROUTES **
 
@@ -98,8 +98,8 @@ router.get('/:cart_id/items', async (req, res) => {
 router.post('/:cart_id/items', async (req, res) => {
     try {
         const { cart_id } = req.params;
-        const { product_id, quantity, price } = req.body;
-        const result = await addOrUpdateCartItem(cart_id, product_id, quantity, price);
+        const { product_id, quantity } = req.body;
+        const result = await addOrUpdateCartItem(cart_id, product_id, quantity);
         res.status(201).json(result.rows[0]);
     } catch (err) {
         console.error(err);
@@ -144,6 +144,58 @@ router.delete('/:cart_id/clear', async (req, res) => {
     }
 });
 
+// POST - Checkout a cart
+router.post('/:id/checkout', async (req, res) => {
+
+    const { id } = req.params;
+
+    // Check if the user is authenticated
+    if (!req.user) {
+        return res.status(401).send('You must be logged in to checkout');
+    }
+
+    const user_id = req.user.id;  // Get user_id from the session
+
+    try {
+
+        // Cart validation
+        const cartResult = await getCartById(id);
+        if (cartResult.rows.length === 0) {
+            return res.status(404).send('Cart not found');
+        }
+
+        // Fetching cart items
+        const cartItemsResult = await getCartItems(id);
+        const cartItems = cartItemsResult.rows;
+
+        if (cartItems.length === 0) {
+            return res.status(400).send('Cart is empty');
+        }
+
+        // Calculating total price for the order
+        const totalPrice = cartItems.reduce((acc, item) => acc + item.total_price, 0)
+
+        // Creating the order (insert into orders table)
+        const orderResult = await createOrder(user_id, id, totalPrice);
+
+        // Creating the order items (moving items from cart to order_items table)
+        const order_id = orderResult.rows[0].id;
+        await createOrderItems(order_id, cartItems);
+
+        // Clearing the cart after successful checkout
+        await clearCart(id);
+
+        // Returning the created order
+        res.status(201).json({
+            message: 'Checkout successful!',
+            order: orderResult.rows[0]
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error processing checkout')
+    }
+});
 
 module.exports = router;
 
