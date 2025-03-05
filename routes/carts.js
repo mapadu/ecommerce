@@ -173,7 +173,7 @@ router.post('/:id/checkout', async (req, res) => {
         }
 
         // Calculating total price for the order
-        const totalPrice = cartItems.reduce((acc, item) => acc + item.total_price, 0)
+        const totalPrice = cartItems.reduce((acc, item) => acc + parseFloat(item.total_price), 0)
 
         // Creating the order (insert into orders table)
         const orderResult = await createOrder(user_id, id, totalPrice);
