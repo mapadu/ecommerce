@@ -1,0 +1,191 @@
+openapi: 3.0.0
+info:
+  title: E-commerce API
+  description: This is the API documentation for the E-commerce application.
+  version: 1.0.0
+  contact:
+    name: Rajmund Takács
+    email: rajmi@rajmi.com
+    url: http://rajmi.com
+servers:
+  - url: http://localhost:3000
+    description: Local server
+
+paths:
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Get all products
+      description: Retrieve all products available in the catalog.
+      operationId: getAllProducts
+      responses:
+        '200':
+          description: A list of all products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '500':
+          description: Error fetching products
+
+    post:
+      tags:
+        - Products
+      summary: Add a new product
+      operationId: addProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInput'
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Missing required fields
+        '500':
+          description: Error creating product
+
+  /products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Get a specific product by ID
+      description: Retrieve details for a specific product by its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the product
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A single product and its details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Product not found
+        '500':
+          description: Error fetching product
+
+    put:
+      tags:
+        - Products
+      summary: Update a product
+      operationId: updateProduct
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the product
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInput'
+      responses:
+        '200':
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '500':
+          description: Error updating product
+
+    delete:
+      tags:
+        - Products
+      summary: Delete a product by ID
+      operationId: deleteProduct
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the product
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Product deleted successfully
+        '500':
+          description: Error deleting product
+
+  /products/category/{category}:
+    get:
+      tags:
+        - Products
+      summary: Get products by category
+      operationId: getProductsByCategory
+      parameters:
+        - name: category
+          in: path
+          required: true
+          description: The category of the products
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of products in the given category
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '500':
+          description: Error fetching products
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+          format: float
+        category:
+          type: string
+        stock_quantity:
+          type: integer
+
+    ProductInput:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+          format: float
+        category:
+          type: string
+        stock_quantity:
+          type: integer
+      required:
+        - name
+        - description
+        - price
+        - category
+        - stock_quantity

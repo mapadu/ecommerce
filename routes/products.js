@@ -25,7 +25,14 @@ router.get('/:id', async (req, res) => {
     const { id } = req.params;
     try {
         const result = await getProductById(id);
+
+        // Check if the product exists
+        if (result.rows.length === 0) {
+            return res.status(404).send('Product not found')
+        }
+
         res.json(result.rows[0]);
+        
     } catch (err) {
         console.error(err);
         res.status(500).send('Error fetching product');
