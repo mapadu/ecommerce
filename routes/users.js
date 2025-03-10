@@ -27,6 +27,11 @@ router.get('/:id', async (req, res) => {
     const { id } = req.params;
     try {
         const result = await getUserById(id);
+
+        if (!result.rows.length) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
         res.json(result.rows[0]);
     } catch (err) {
         console.error(err);
@@ -40,7 +45,7 @@ router.post('/register', async (req, res) => {
 
     // Validation - checking if all fields are provided
     if(!name || !email || !password) {
-        return res.status(400).json({ error: 'Please provide an id, name, email and password'});
+        return res.status(400).json({ error: 'Invalid input data. Please provide a name, email and password.'});
     }
 
     try {
@@ -83,8 +88,19 @@ router.post('/login', (req, res, next) => {
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
     const { name, email, password } = req.body;
+
+    // Validate input data
+    if (!name || !email || !password) {
+        return res.status(400).json({ error: 'Invalid input data. Name, email, and password are required.' });
+    }
+
     try {
         const result = await updateUser(id, name, email, password);
+
+        if (!result.rows.length) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
         res.json(result.rows[0]);
     } catch (err) {
         console.error(err);
@@ -97,6 +113,11 @@ router.delete('/:id', async (req, res) => {
     const { id } = req.params;
     try {
         const result = await deleteUser(id);
+
+        if (!result.rows.length) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
         res.status(200).send(`User with ID ${id} deleted`);
     } catch (err) {
         console.error(err);
