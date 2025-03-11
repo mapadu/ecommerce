@@ -380,7 +380,7 @@ paths:
         - Users
       summary: User login
       description: Authenticate a user and log them in using email and password.
-      operationId: loginrUser
+      operationId: loginUser
       requestBody:
         required: true
         content:
