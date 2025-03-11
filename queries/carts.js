@@ -11,9 +11,16 @@ const getCartsByUserId = (user_id) => {
     return query('SELECT * FROM carts WHERE user_id = $1', [user_id]);
 };
 
-// Get a cart by its ID
-const getCartById = (id) => {
-    return query('SELECT * FROM carts WHERE id = $1', [id]);
+const getCartById = async (id) => {
+    return query(
+        `SELECT c.id, c.user_id, 
+                COALESCE(SUM(ci.total_price), 0) AS total_price
+         FROM carts c
+         LEFT JOIN cart_items ci ON c.id = ci.cart_id
+         WHERE c.id = $1
+         GROUP BY c.id, c.user_id;`,
+        [id]
+    );
 };
 
 // Create a new cart for a user
