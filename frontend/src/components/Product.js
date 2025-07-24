@@ -5,7 +5,7 @@ const Product = ({ product }) => {
     return (
         <div>
             <Link to={`/products/${product.id}`}>
-                <img src={`${process.env.REACT_APP_API_URL}${product.image}`} alt={product.name} width="200" loading="lazy" />
+                <img src={product.image} alt={product.name} width="200" loading="lazy" />
                 <h2>{product.name}</h2>
                 <p>{product.description}</p>
             </Link>
