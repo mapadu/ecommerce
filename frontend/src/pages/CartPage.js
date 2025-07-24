@@ -11,7 +11,7 @@ const CartPage = () => {
     useEffect(() => {
         const fetchCart = async () => {
             try {
-                const responseCart = await fetch('/carts/current', {
+                const responseCart = await fetch(`${process.env.REACT_APP_API_URL}/carts/current`, {
                     credentials: 'include'
                 });
                 if (!responseCart.ok) throw new Error('Failed to fetch cart');
@@ -24,7 +24,7 @@ const CartPage = () => {
                 const cart_id = carts[0].id;
                 setCartId(cart_id);
 
-                const responseItems = await fetch(`/carts/${cart_id}/items`, {
+                const responseItems = await fetch(`${process.env.REACT_APP_API_URL}/carts/${cart_id}/items`, {
                     credentials: 'include'
                 });
                 if (!responseItems.ok) throw new Error('Failed to fetch cart items');
@@ -42,7 +42,7 @@ const CartPage = () => {
 
     const removeItem = async (product_id) => {
         try {
-            await fetch(`/carts/${cartId}/items/${product_id}`, {
+            await fetch(`${process.env.REACT_APP_API_URL}/carts/${cartId}/items/${product_id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });

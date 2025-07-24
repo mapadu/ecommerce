@@ -16,7 +16,7 @@ const CheckoutPage = () => {
     useEffect(() => {
         const fetchCartAndCreateIntent = async () => {
             try {
-                const responseCart = await fetch('/carts/current', {
+                const responseCart = await fetch(`${process.env.REACT_APP_API_URL}/carts/current`, {
                     credentials: 'include'
                 });
                 if (!responseCart.ok) throw new Error('Failed to fetch cart');
@@ -29,7 +29,7 @@ const CheckoutPage = () => {
                 const cart_id = carts[0].id;
                 setCartId(cart_id);
 
-                const responseItems = await fetch(`/carts/${cart_id}/items`, {
+                const responseItems = await fetch(`${process.env.REACT_APP_API_URL}/carts/${cart_id}/items`, {
                     credentials: 'include'
                 });
                 if (!responseItems.ok) throw new Error('Failed to fetch cart items');
@@ -39,7 +39,7 @@ const CheckoutPage = () => {
                 const total = items.reduce((sum, item) => sum + parseFloat(item.total_price), 0);
                 setAmount(total);
 
-                const responseIntent = await fetch('/stripe/create-payment-intent', {
+                const responseIntent = await fetch(`${process.env.REACT_APP_API_URL}/stripe/create-payment-intent`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ amount: Math.round(total * 100) })
@@ -74,7 +74,7 @@ const CheckoutPage = () => {
             setMessage(result.error.message);
         } else if (result.paymentIntent.status === 'succeeded') {
             try {
-                const response = await fetch('/carts/checkout', {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/carts/checkout`, {
                     method: 'POST',
                     credentials: 'include'
                 });

@@ -40,7 +40,7 @@ const RegistrationPage = () => {
           const searchParams = new URLSearchParams(location.search);
           const returnTo = searchParams.get('returnTo') || '/';
       
-          navigate(returnTo, { replace: true }); // ✅ tiszta redirect
+          navigate(returnTo, { replace: true });
         } catch {
           // error-t már kezeli a hook
         } finally {

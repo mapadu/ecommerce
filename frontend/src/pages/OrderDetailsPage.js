@@ -12,7 +12,7 @@ const OrderDetailsPage = () => {
     useEffect(() => {
         const fetchOrderDetails = async () => {
             try {
-                const orderResponse = await fetch(`/orders/${id}`, {
+                const orderResponse = await fetch(`${process.env.REACT_APP_API_URL}/orders/${id}`, {
                     credentials: 'include',
                 });
 
@@ -22,7 +22,7 @@ const OrderDetailsPage = () => {
                 const orderData = await orderResponse.json();
                 setOrder(orderData);
 
-                const itemsResponse = await fetch(`/orders/${id}/items`, {
+                const itemsResponse = await fetch(`${process.env.REACT_APP_API_URL}/orders/${id}/items`, {
                     credentials: 'include',
                 });
 
