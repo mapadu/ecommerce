@@ -16,7 +16,7 @@ const ProductList = () => {
                 const data = await response.json();
                 setProducts(data);
             } catch (err) {
-                console.err('Error fetching products:', err);
+                console.error('Error fetching products:', err);
                 setError(err.message);
             } finally {
                 setLoading(false);
