@@ -23,7 +23,7 @@ app.use(helmet());
 
 // CORS middleware
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: process.env.FRONTEND_URL,
     credentials: true
 }));
 
@@ -43,9 +43,9 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
       httpOnly: true,
-      sameSite: 'lax'
+      sameSite: 'none'
     }
 }));
 // Initialize Passport middleware (for authentication handling)

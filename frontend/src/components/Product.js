@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Product = ({ product }) => {
+    console.log('Image URL:', product.image);
     return (
         <div>
             <Link to={`/products/${product.id}`}>
