@@ -6,4 +6,5 @@
 - Admin role (ensureAdmin middleware...)
 - Ordersnél sessionből kiszedni az adatokat, ne param legyen.
 - Authcontext login flow
+- Same cookie and session handling with ternary operator between versions
 
