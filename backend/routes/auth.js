@@ -15,6 +15,10 @@ const {
 
 // GET - Current user from session
 router.get('/me', (req, res) => {
+    console.log('--- /auth/me called ---');
+    console.log('Session:', req.session);
+    console.log('User:', req.user);
+    console.log('isAuthenticated:', req.isAuthenticated?.());
     if (req.isAuthenticated()) {
         res.json({ user: req.user });
     } else {
