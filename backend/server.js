@@ -43,11 +43,11 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: true,
+      secure: isProduction,                    
       httpOnly: true,
-      sameSite: 'none'
+      sameSite: isProduction ? 'none' : 'lax'
     }
-}));
+  }));
 // Initialize Passport middleware (for authentication handling)
 app.use(passport.initialize());
 // Enable Passport middleware to use session-based authentication (combine the passport middleware and express-session)
