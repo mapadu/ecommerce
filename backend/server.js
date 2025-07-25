@@ -16,6 +16,9 @@ const authRoutes = require('./routes/auth');
 const stripeRoutes = require('./routes/stripe');
 
 const app = express();
+
+app.set('trust proxy', 1);
+
 const PORT = 8000;
 
 // Helmet security headers
