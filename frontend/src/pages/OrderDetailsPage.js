@@ -51,7 +51,7 @@ const OrderDetailsPage = () => {
             ) : (
                 <ul>
                     {items.map((item) => (
-                        <li key={item.id}>{item.name} - {item.quantity} - ${item.quantity}</li>
+                        <li key={item.id}>{item.name} - {item.quantity} - ${item.price}</li>
                     ))}
                 </ul>
             )}
