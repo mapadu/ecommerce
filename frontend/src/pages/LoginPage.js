@@ -41,8 +41,8 @@ const LoginPage = () => {
       
         try {
           await handleLogin({ email, password });
-      
-          navigate(returnTo, { replace: true });
+          window.location.href = returnTo;
+          //navigate(returnTo, { replace: true });
         } catch {
           // error already handled in hook
         } finally {
